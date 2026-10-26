@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="csrf-token" content="__TOKEN__">
+  <title>Audio Truyện — Bàn biên tập</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" aria-label="Điều hướng">
+    <div class="brand"><div class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div>audio truyện<small>STORY TO SOUND</small></div></div>
+    <nav class="nav">
+      <button class="active" id="new-project"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Bàn biên tập</button>
+      <button id="history-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v15H4zM8 5V3h8v2M8 10h8M8 14h6"/></svg>Dự án đã lưu</button>
+    </nav>
+    <section class="recent"><p class="eyebrow history-label">Gần đây</p><div class="history" id="history"><small>Chưa có dự án</small></div></section>
+    <div class="side-note"><strong><span class="dot"></span>Không gian tại máy</strong>Dự án được lưu trong thư mục storage/projects.<br>AI nhận văn bản; TTS nhận lời đọc; ASR nhận audio khi được cấu hình.<br><br>Bản thử nghiệm · 0.2</div>
+  </aside>
+  <main>
+    <header class="topbar"><div>Không gian làm việc <span aria-hidden="true"> / </span><strong> Bàn biên tập</strong></div><span class="badge" id="connection">Đang kết nối máy chủ</span></header>
+    <section class="hero"><div><p class="eyebrow">Từ trang viết đến lời kể</p><h1>Giữ hồn truyện.<br><em>Gọn từng phút kể.</em></h1><p>Rút gọn có dẫn chứng, giữ lại những điều làm nên câu chuyện.</p></div><button class="button ghost" id="sample">Thử với truyện mẫu <span aria-hidden="true">↗</span></button></section>
+    <div class="steps" aria-label="Quy trình"><span class="step current" id="step-1"><b>1</b>Nhập truyện</span><hr><span class="step" id="step-2"><b>2</b>Biên tập</span><hr><span class="step" id="step-3"><b>3</b>Duyệt & nghe</span></div>
+    <div class="workspace">
+      <div class="column">
+        <form id="editor">
+          <section class="card"><header class="card-head"><h2><span class="section-number">01</span>Văn bản nguồn</h2><small>TXT · Markdown · Dán văn bản</small></header><div class="body">
+            <div class="metadata"><label class="field">Tên truyện / chương<input id="title" name="title" maxlength="160" placeholder="Đặt tên cho câu chuyện"></label><label class="field">Tác giả / nguồn<input id="author" name="author" maxlength="160" placeholder="Tên tác giả"></label></div>
+            <div class="source"><label class="field" for="text">Nội dung truyện</label><textarea id="text" name="text" aria-describedby="source-count" placeholder="Dán truyện có tiêu đề Chương 1, Chương 2… Dùng *** để ngăn cảnh." maxlength="1000000" required></textarea></div>
+            <div class="source-tools"><span id="source-count">0 đơn vị cách trắng · tối đa 1.000.000 ký tự</span><label class="upload">Nhập tệp .txt<input type="file" id="file" accept=".txt,.md,text/plain,text/markdown" aria-label="Nhập tệp văn bản UTF-8"></label></div>
+          </div></section>
+          <section class="card settings-card"><header class="card-head"><h2><span class="section-number">02</span>Định hướng bản kể</h2><small>Bạn quyết định nhịp kể</small></header><div class="body">
+            <div class="settings">
+              <label class="field">Chế độ xử lý<select id="mode" name="mode"><option value="preview">Thử tại máy · trích nguyên câu</option><option value="ai" id="ai-option" disabled>Biên tập bằng AI · cần cấu hình</option></select></label>
+              <label class="field">Thời lượng mục tiêu (phút)<input id="target" name="target_duration" type="number" min="0.5" max="180" step="any" placeholder="Không xác định"><span class="field-note">Để trống để nhận đủ 3 mức rút gọn.</span></label>
+              <label class="field" id="profile-field" hidden>Mức rút gọn<select id="profile"><option value="preserve">Giữ nhiều</option><option value="balanced" selected>Cân bằng</option><option value="compact">Rút mạnh</option></select></label>
+            </div>
+            <label class="field lexicon-field">Từ điển phát âm (không bắt buộc)<textarea id="pronunciation-lexicon" rows="3" maxlength="40000" placeholder="Mỗi dòng: tên = cách đọc&#10;AI = ây ai"></textarea><span class="field-note">Tối đa 200 mục. Số, ngày giờ, phần trăm và tiền được chuẩn hóa riêng cho TTS; bản kể giữ nguyên.</span></label>
+            <div class="rights"><label class="check"><input id="rights" type="checkbox" required><span>Tôi có quyền xử lý và chuyển thể nội dung này.</span></label><label class="field">Nguồn hoặc căn cứ sử dụng<input id="rights-note" maxlength="1000" placeholder="Ví dụ: tự sáng tác; giấy phép chuyển thể…" required></label></div>
+            <div class="submit-row"><small>Thời lượng chữ là dự báo.<br>Luôn nghe duyệt bản cuối.</small><button class="button primary" type="submit" id="submit">Tạo bản kể <span aria-hidden="true">→</span></button></div>
+          </div></section>
+        </form>
+        <details class="help"><summary>Hướng dẫn nhanh & kết nối AI</summary><p>Nhập ít nhất 20 đơn vị cách trắng, xác nhận quyền sử dụng rồi tạo bản kể. Chế độ thử chỉ chọn câu nguồn; chưa hiểu quan hệ nhân quả và người nói.</p><p>Để dùng dịch vụ tương thích Chat Completions, đặt <code>LLM_URL</code>, <code>LLM_MODEL</code> và <code>LLM_API_KEY</code> trong môi trường rồi khởi động lại máy chủ. Xem README.md để biết giao thức và giới hạn.</p><p>Nghe thử dùng giọng tiếng Việt có sẵn trên trình duyệt. Tính năng này không xuất file audio.</p></details>
+      </div>
+      <div class="column">
+        <section class="card output" aria-labelledby="output-title"><header class="card-head"><h2 id="output-title"><span class="section-number">03</span>Kịch bản audio</h2><div class="output-label"><span></span><span id="output-state">Chờ văn bản</span></div></header>
+          <div class="empty" id="empty"><div class="illustration" aria-hidden="true"><div class="page"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="sound"><i></i><i></i><i></i><i></i><i></i></div></div><h3>Mỗi câu chuyện có một nhịp kể.</h3><p>Thêm văn bản và chọn cách rút gọn.<br>Bản kể cùng dẫn chứng sẽ xuất hiện ở đây.</p><p class="hint">Giữ nhiều · Cân bằng · Rút mạnh</p></div>
+          <div class="progress" id="progress" hidden role="status"><div class="spinner" aria-hidden="true"></div><strong>Đang biên tập câu chuyện</strong><p id="progress-text"></p></div>
+          <div id="result" hidden><div class="tabs" id="tabs" role="tablist" aria-label="Mức rút gọn"></div><div id="variant-panel" role="tabpanel"><div class="metrics"><div class="metric"><strong id="result-units"></strong><span>đơn vị cách trắng</span></div><div class="metric"><strong id="result-cut"></strong><span>độ dài đã giảm</span></div><div class="metric"><strong id="result-duration"></strong><span id="duration-label">dự báo · chưa đo audio</span></div></div><div class="scene-tools"><p id="structure-note" class="field-note"></p><label class="field">Chương / cảnh<select id="scene-filter"></select></label></div><div class="transcript" id="transcript"></div><div class="output-actions"><button class="button primary" id="speak" disabled>Nghe thử tại máy</button><button class="button" id="save-text">Tải bản kể .txt</button><a class="button" id="download" href="#">Tải hồ sơ .zip</a></div><p class="audio-note" id="voice-note">Đang tìm giọng đọc tiếng Việt trên trình duyệt.</p>
+            <div class="body audio-section"><label class="check"><input type="checkbox" id="audio-approved"><span>Tôi đã duyệt kịch bản và đồng ý dùng TTS, ASR đã cấu hình. Với chế độ AI có thời lượng mục tiêu, hệ thống có thể tự sửa và tổng hợp lại tối đa 2 vòng. Dịch vụ có thể tính phí; cần duyệt lại bản cuối.</span></label><div class="output-actions audio-actions"><button class="button primary" id="create-audio" disabled>Tạo WAV & MP3</button><a class="button" id="audio-download" hidden>Tải MP3</a></div><p class="field-note" id="tts-note">Chưa cấu hình dịch vụ TTS.</p><audio id="audio-player" controls preload="none" hidden class="audio-player" aria-label="Bản audio đã tổng hợp"></audio></div>
+            <section class="body qa-section" id="qa-panel" hidden aria-labelledby="qa-title"><h3 id="qa-title">QA & nghe duyệt</h3><p id="qa-status" role="status"></p><ul id="qa-checks"></ul><details><summary>Báo cáo chi tiết và bản ASR</summary><pre id="qa-json"></pre></details><form id="qa-review-form"><label class="field">Người nghe duyệt<input id="qa-reviewer" maxlength="120" required></label><div id="qa-checklist" class="qa-checklist"></div><label class="field">Ghi chú, nhãn nội dung hoặc lỗi cần sửa<textarea id="qa-notes" maxlength="2000" rows="3"></textarea></label><div class="output-actions audio-actions"><button class="button primary" id="qa-approve" type="submit" value="approved">Duyệt bản cuối</button><button class="button" type="submit" value="rejected">Yêu cầu sửa</button></div></form></section>
+          </div></div>
+        </section>
+        <section class="review" id="review" hidden aria-live="polite"><h3>Cần biên tập viên duyệt</h3><p id="review-text"></p><ul id="review-list"></ul></section>
+      </div>
+    </div>
+    <footer class="footer"><span>Văn bản nguồn → kế hoạch rút gọn → kịch bản có dẫn chứng</span><span>Không tự phát hành · Luôn có bước nghe duyệt</span></footer>
+  </main>
+</div>
+<dialog id="evidence-dialog" aria-labelledby="evidence-title"><h2 id="evidence-title">Đối chiếu văn bản nguồn</h2><small id="evidence-location"></small><p id="evidence-text"></p><button class="button" id="close-evidence">Đóng</button></dialog>
+<dialog id="history-dialog" aria-labelledby="history-title"><h2 id="history-title">Dự án đã lưu tại máy</h2><div class="history" id="history-full"></div><button class="button" id="close-history">Đóng</button></dialog>
+<div class="toast" id="toast" role="alert" hidden></div>
+<script src="/js/app.js" defer></script>
+</body>
+</html>
